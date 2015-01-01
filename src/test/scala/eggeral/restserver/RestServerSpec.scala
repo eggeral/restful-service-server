@@ -1,6 +1,7 @@
 package eggeral.restserver
 
-import java.net.InetSocketAddress
+import java.net.{ConnectException, InetSocketAddress}
+import java.nio.ByteBuffer
 import java.nio.channels.SocketChannel
 import javax.ws.rs.client.ClientBuilder
 
@@ -17,7 +18,28 @@ class RestServerSpec extends Spec
 
     //then
     result should be("hello world")
+    shutdown(8005, "shutdown")
+  }
+
+  "A RestServer" can "be shut down sending a password to a TCP socket" in {
+    //given
+    RestServer.main(Array("--port","9005","--shutdown","abcd", "--resources", "eggeral.restserver.test.TestService1"))
+
+    //when
+    shutdown(9005, "abcd")
+
+    //then
+    Thread.sleep(100)
     val socketChannel = SocketChannel.open()
-    socketChannel.connect(new InetSocketAddress("localhost", 8005))
+    intercept[ConnectException]{
+      socketChannel.connect(new InetSocketAddress("localhost", 9005))
+    }
+  }
+
+  def shutdown(port: Int, phrase: String) : Unit = {
+    val socketChannel = SocketChannel.open()
+    socketChannel.connect(new InetSocketAddress("localhost", port))
+    socketChannel.write(ByteBuffer.wrap(phrase.getBytes()))
+    socketChannel.close()
   }
 }
