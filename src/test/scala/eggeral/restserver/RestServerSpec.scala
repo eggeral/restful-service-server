@@ -9,11 +9,10 @@ class RestServerSpec extends Spec
 {
   "A RestServer" can "serve a Restful web services" in {
     //given
-    RestServer.main(Array("resources=eggeral.restserver.TestService1,eggeral.restserver.test.TestService2"))
+    RestServer.main(Array("--resources","eggeral.restserver.test.TestService1,eggeral.restserver.test.TestService2"))
     val client = ClientBuilder.newClient()
 
     //when
-
     val result = client.target("http://localhost:8080/test1").request().get().readEntity(classOf[String])
 
     //then

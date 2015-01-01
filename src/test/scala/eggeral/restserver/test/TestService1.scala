@@ -1,4 +1,4 @@
-package eggeral.restserver
+package eggeral.restserver.test
 
 import javax.ws.rs.{GET, Path}
 
@@ -6,7 +6,5 @@ import javax.ws.rs.{GET, Path}
 class TestService1
 {
   @GET
-  def test1(): String = {
-    "hello world"
-  }
+  def test1(): String = "hello world"
 }

@@ -11,13 +11,22 @@ import org.glassfish.jersey.server.ResourceConfig
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 
+import org.rogach.scallop._
+
+class Conf(arguments: Seq[String]) extends ScallopConf(arguments) {
+  val resources = opt[String](required = true)
+}
+
 object RestServer
 {
-  var server: HttpServer = _
-  var logger: Logger = Logger.getLogger("eggeral.restserver.RestServer")
+  private var server: HttpServer = _
+  private val logger: Logger = Logger.getLogger("eggeral.restserver.RestServer")
+  private var conf: Conf = _
 
   def main(args: Array[String])
   {
+    conf = new Conf(args)
+
     start()
     Future
     {
@@ -35,7 +44,10 @@ object RestServer
   def start(): Unit =
   {
     val resourceConfig: ResourceConfig = new ResourceConfig()
-    resourceConfig.registerClasses(classOf[TestService1])
+    for (resource <- conf.resources().split(",")) {
+      logger.info(s"Registering resource: ${resource}.")
+      resourceConfig.registerClasses(Class.forName(resource))
+    }
     server = GrizzlyHttpServerFactory.createHttpServer(URI.create("http://localhost:8080"), resourceConfig)
     val config = server.getServerConfiguration
     config.setJmxEnabled(true)
