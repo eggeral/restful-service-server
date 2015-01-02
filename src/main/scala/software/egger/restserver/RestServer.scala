@@ -1,6 +1,6 @@
 package software.egger.restserver
 
-import java.net.{URI, InetSocketAddress}
+import java.net.{InetSocketAddress, URI}
 import java.nio.channels.ServerSocketChannel
 import java.util.Scanner
 import java.util.logging.Logger
@@ -8,11 +8,11 @@ import java.util.logging.Logger
 import org.glassfish.grizzly.http.server.HttpServer
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory
 import org.glassfish.jersey.server.ResourceConfig
-
-import scala.concurrent.Future
-import scala.concurrent.ExecutionContext.Implicits.global
-
 import org.rogach.scallop._
+
+import scala.collection.JavaConversions._
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 
 class RestServerConf(arguments: Seq[String]) extends ScallopConf(arguments)
 {
@@ -20,6 +20,7 @@ class RestServerConf(arguments: Seq[String]) extends ScallopConf(arguments)
   val port = opt(default = Some(8005))
   val shutdown = opt(default = Some("shutdown"))
   val uri = opt(default = Some("http://localhost:8080"))
+  val properties = props[String]('P')
 }
 
 object RestServer
@@ -64,6 +65,7 @@ object RestServer
   def start(): Unit =
   {
     val resourceConfig: ResourceConfig = new ResourceConfig()
+    resourceConfig.addProperties(conf.properties)
     for (resource <- conf.resources().split(","))
     {
       logger.info(s"Registering resource: $resource.")

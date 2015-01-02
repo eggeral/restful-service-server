@@ -38,15 +38,15 @@ class RestServerSpec extends Spec
   "A RestServer" can "be bound to a given URI" in
     {
       //given
-      RestServer.main(Array("--uri", "http://localhost:8180", "--resources", "software.egger.restserver.test.TestService2"))
+      RestServer.main(Array("--uri", "http://localhost:8180", "--resources", "software.egger.restserver.test.TestService1"))
       Thread.sleep(100)
       val client = ClientBuilder.newClient()
 
       //when
-      val result = client.target("http://localhost:8180/test2").request().get().readEntity(classOf[String])
+      val result = client.target("http://localhost:8180/test1").request().get().readEntity(classOf[String])
 
       //then
-      result should be("how are you")
+      result should be("hello world")
       shutdownRestServer(8005, "shutdown")
     }
 
@@ -61,6 +61,21 @@ class RestServerSpec extends Spec
       //then
 
       restServerShouldBeShutdown(9006)
+    }
+
+  "A RestServer" can "pass arguments to the Resources" in
+    {
+      //given
+      RestServer.main(Array("--resources", "software.egger.restserver.test.TestService2" , "-Pmessage=how are you?"))
+      Thread.sleep(100)
+      val client = ClientBuilder.newClient()
+
+      //when
+      val result = client.target("http://localhost:8080/test2").request().get().readEntity(classOf[String])
+
+      //then
+      result should be("how are you?")
+      shutdownRestServer(8005, "shutdown")
     }
 
   private def restServerShouldBeShutdown(port: Int): Unit =
