@@ -15,7 +15,7 @@ class ShutdownRestServerConf(arguments: Seq[String]) extends ScallopConf(argumen
 
 object ShutdownRestServer
 {
-  private val logger: Logger = Logger.getLogger("eggeral.restserver.ShutdownRestServer")
+  private val logger: Logger = Logger.getLogger("software.egger.restserver.ShutdownRestServer")
 
   def main(args: Array[String])
   {

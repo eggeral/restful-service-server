@@ -25,7 +25,7 @@ class RestServerConf(arguments: Seq[String]) extends ScallopConf(arguments)
 object RestServer
 {
   private var server: HttpServer = _
-  private val logger: Logger = Logger.getLogger("eggeral.restserver.RestServer")
+  private val logger: Logger = Logger.getLogger("software.egger.restserver.RestServer")
   private var conf: RestServerConf = _
 
   def main(args: Array[String])
