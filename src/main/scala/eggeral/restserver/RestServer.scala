@@ -14,24 +14,29 @@ import scala.concurrent.ExecutionContext.Implicits.global
 
 import org.rogach.scallop._
 
-class Conf(arguments: Seq[String]) extends ScallopConf(arguments)
+class RestServerConf(arguments: Seq[String]) extends ScallopConf(arguments)
 {
   val resources = opt(required = true, default = Some(""))
   val port = opt(default = Some(8005))
   val shutdown = opt(default = Some("shutdown"))
+  val uri = opt(default = Some("http://localhost:8080"))
 }
 
 object RestServer
 {
   private var server: HttpServer = _
   private val logger: Logger = Logger.getLogger("eggeral.restserver.RestServer")
-  private var conf: Conf = _
+  private var conf: RestServerConf = _
 
   def main(args: Array[String])
   {
-    conf = new Conf(args)
-
+    conf = new RestServerConf(args)
     start()
+    setupShutdownPort()
+  }
+
+  def setupShutdownPort() : Unit =
+  {
     Future
     {
       val shutdownPort = conf.port()
@@ -64,7 +69,7 @@ object RestServer
       logger.info(s"Registering resource: ${resource}.")
       resourceConfig.registerClasses(Class.forName(resource))
     }
-    server = GrizzlyHttpServerFactory.createHttpServer(URI.create("http://localhost:8080"), resourceConfig)
+    server = GrizzlyHttpServerFactory.createHttpServer(URI.create(conf.uri()), resourceConfig)
     val config = server.getServerConfiguration
     config.setJmxEnabled(true)
     server.start()
