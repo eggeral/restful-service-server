@@ -1,4 +1,4 @@
-package eggeral.restserver.test
+package software.egger.restserver.test
 
 import javax.ws.rs.{GET, Path}
 

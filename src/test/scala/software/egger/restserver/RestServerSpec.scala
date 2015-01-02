@@ -1,4 +1,4 @@
-package eggeral.restserver
+package software.egger.restserver
 
 import java.net.{ConnectException, InetSocketAddress}
 import java.nio.channels.SocketChannel
@@ -10,7 +10,7 @@ class RestServerSpec extends Spec
   "A RestServer" can "serve Restful web services" in
     {
       //given
-      RestServer.main(Array("--resources", "eggeral.restserver.test.TestService1,eggeral.restserver.test.TestService2"))
+      RestServer.main(Array("--resources", "software.egger.restserver.test.TestService1,software.egger.restserver.test.TestService2"))
       Thread.sleep(100)
       val client = ClientBuilder.newClient()
 
@@ -25,7 +25,7 @@ class RestServerSpec extends Spec
   "A RestServer" can "be shut down sending a password to a TCP socket" in
     {
       //given
-      RestServer.main(Array("--port", "9005", "--shutdown", "abcd", "--resources", "eggeral.restserver.test.TestService1"))
+      RestServer.main(Array("--port", "9005", "--shutdown", "abcd", "--resources", "software.egger.restserver.test.TestService1"))
       Thread.sleep(100)
 
       //when
@@ -38,7 +38,7 @@ class RestServerSpec extends Spec
   "A RestServer" can "be bound to a given URI" in
     {
       //given
-      RestServer.main(Array("--uri", "http://localhost:8180", "--resources", "eggeral.restserver.test.TestService2"))
+      RestServer.main(Array("--uri", "http://localhost:8180", "--resources", "software.egger.restserver.test.TestService2"))
       Thread.sleep(100)
       val client = ClientBuilder.newClient()
 
@@ -53,7 +53,7 @@ class RestServerSpec extends Spec
   "A RestServer" can "be shutdown using the Shutdown utility" in
     {
       //given
-      RestServer.main(Array("--port", "9006", "--shutdown", "test", "--resources", "eggeral.restserver.test.TestService2"))
+      RestServer.main(Array("--port", "9006", "--shutdown", "test", "--resources", "software.egger.restserver.test.TestService2"))
       Thread.sleep(100)
 
       //when

@@ -1,4 +1,4 @@
-package eggeral.restserver
+package software.egger.restserver
 
 import java.net.{URI, InetSocketAddress}
 import java.nio.channels.ServerSocketChannel
@@ -40,7 +40,7 @@ object RestServer
     Future
     {
       val shutdownPort = conf.port()
-      logger.info(s"Shutdown port is: ${shutdownPort}.")
+      logger.info(s"Shutdown port is: $shutdownPort.")
       val shutdownSocket = ServerSocketChannel.open()
       shutdownSocket.socket().bind(new InetSocketAddress(shutdownPort))
       var exit = false
@@ -49,7 +49,7 @@ object RestServer
         val socket = shutdownSocket.accept()
         val scanner = new Scanner(socket)
         val phrase = scanner.nextLine()
-        logger.info(s"Shutdown request received. Phrase was ${phrase}, should be ${conf.shutdown()}")
+        logger.info(s"Shutdown request received. Phrase was $phrase, should be ${conf.shutdown()}")
         if (phrase == conf.shutdown())
           exit = true
         socket.close()
@@ -66,7 +66,7 @@ object RestServer
     val resourceConfig: ResourceConfig = new ResourceConfig()
     for (resource <- conf.resources().split(","))
     {
-      logger.info(s"Registering resource: ${resource}.")
+      logger.info(s"Registering resource: $resource.")
       resourceConfig.registerClasses(Class.forName(resource))
     }
     server = GrizzlyHttpServerFactory.createHttpServer(URI.create(conf.uri()), resourceConfig)

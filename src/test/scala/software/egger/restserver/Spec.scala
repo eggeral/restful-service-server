@@ -1,4 +1,4 @@
-package eggeral.restserver
+package software.egger.restserver
 
 import org.scalatest.{FlatSpec, Inside, Inspectors, Matchers, OptionValues}
 

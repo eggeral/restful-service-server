@@ -1,4 +1,4 @@
-package eggeral.restserver
+package software.egger.restserver
 
 import java.net.InetSocketAddress
 import java.nio.ByteBuffer
@@ -25,10 +25,10 @@ object ShutdownRestServer
 
   def shutdownRestServer(port: Int, phrase: String)
   {
-    logger.info(s"Trying to shutdown server at port: ${port} using ${phrase}")
+    logger.info(s"Trying to shutdown server at port: $port using $phrase")
     val socketChannel = SocketChannel.open()
     socketChannel.connect(new InetSocketAddress("localhost", port))
-    socketChannel.write(ByteBuffer.wrap(phrase.getBytes()))
+    socketChannel.write(ByteBuffer.wrap(phrase.getBytes))
     socketChannel.close()
   }
 }
