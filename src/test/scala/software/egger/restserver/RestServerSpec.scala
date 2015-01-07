@@ -78,6 +78,21 @@ class RestServerSpec extends Spec
       shutdownRestServer(8005, "shutdown")
     }
 
+  "A RestServer" can "inject services into resources" in
+    {
+      //given
+      RestServer.main(Array("--resources", "software.egger.restserver.test.TestHk2Injection", "--resource-config", "software.egger.restserver.test.RestServerResourceConfig"))
+      Thread.sleep(100)
+      val client = ClientBuilder.newClient()
+
+      //when
+      val result = client.target("http://localhost:8080/testhk2").request().get().readEntity(classOf[String])
+
+      //then
+      result should be("hello how are you?")
+      shutdownRestServer(8005, "shutdown")
+    }
+
   private def restServerShouldBeShutdown(port: Int): Unit =
   {
     Thread.sleep(100)

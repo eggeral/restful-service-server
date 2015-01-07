@@ -16,7 +16,8 @@ import scala.concurrent.Future
 
 class RestServerConf(arguments: Seq[String]) extends ScallopConf(arguments)
 {
-  val resources = opt(required = true, default = Some(""))
+  val resources = opt[String](required = true)
+  val resourceConfig = opt(default = Some("org.glassfish.jersey.server.ResourceConfig"))
   val port = opt(default = Some(8005))
   val shutdown = opt(default = Some("shutdown"))
   val uri = opt(default = Some("http://localhost:8080"))
@@ -64,7 +65,14 @@ object RestServer
 
   def start(): Unit =
   {
-    val resourceConfig: ResourceConfig = new ResourceConfig()
+    val resourceConfigClass = conf.resourceConfig()
+
+    logger.info(s"Using $resourceConfigClass as resource config.")
+    val resourceConfig = Class.forName(resourceConfigClass).newInstance() match {
+      case conf : ResourceConfig => conf
+      case _ => throw new ClassCastException
+    }
+
     resourceConfig.addProperties(conf.properties)
     for (resource <- conf.resources().split(","))
     {
